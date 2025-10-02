@@ -1,4 +1,4 @@
-// --- PASTE YOUR FIREBASE CONFIG OBJECT HERE ---
+// --- IMPORTANT: PASTE YOUR FIREBASE CONFIG OBJECT HERE ---
 const firebaseConfig = {
   apiKey: "AIzaSyAY17Qc2LyUR_UCcY_-b1oDNorz-4Jonoc",
   authDomain: "admin-portal-33925.firebaseapp.com",
@@ -15,49 +15,67 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const db = firebase.firestore();
 
-// DOM Elements
+// --- DOM Element Selection ---
+// Login View Elements
 const loginView = document.getElementById('loginView');
-const dashboardView = document.getElementById('dashboardView');
-const adminLoginBtn = document.getElementById('adminLoginBtn');
-const adminLogoutBtn = document.getElementById('adminLogoutBtn');
 const adminEmailInput = document.getElementById('adminEmail');
 const adminPasswordInput = document.getElementById('adminPassword');
+const adminLoginBtn = document.getElementById('adminLoginBtn');
 const adminErrorP = document.getElementById('adminError');
+
+// Dashboard View Elements
+const dashboardView = document.getElementById('dashboardView');
+const adminUserEmailSpan = document.getElementById('adminUserEmail');
+const adminLogoutBtn = document.getElementById('adminLogoutBtn');
 const addBusForm = document.getElementById('addBusForm');
 const formStatus = document.getElementById('formStatus');
 
-// Check auth state
+
+// --- Authentication Logic ---
+
+// This function checks if a user is already logged in or not
 auth.onAuthStateChanged(user => {
     if (user) {
+        // If user is logged in, hide the login form and show the dashboard
         loginView.style.display = 'none';
         dashboardView.style.display = 'block';
-        document.getElementById('adminUserEmail').textContent = user.email;
+        adminUserEmailSpan.textContent = user.email;
     } else {
+        // If user is not logged in, show the login form and hide the dashboard
         loginView.style.display = 'block';
         dashboardView.style.display = 'none';
     }
 });
 
-// Login
+// Event listener for the Login Button
 adminLoginBtn.addEventListener('click', () => {
     const email = adminEmailInput.value;
     const password = adminPasswordInput.value;
+    adminErrorP.textContent = ''; // Clear previous errors
+
     auth.signInWithEmailAndPassword(email, password)
         .catch(error => {
+            // If login fails, show an error message
+            console.error("Login Error:", error);
             adminErrorP.textContent = error.message;
         });
 });
 
-// Logout
+// Event listener for the Logout Button
 adminLogoutBtn.addEventListener('click', () => {
     auth.signOut();
 });
 
-// Handle form submission
-addBusForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    formStatus.textContent = 'Adding bus...';
 
+// --- Firestore Logic (Adding a Bus) ---
+
+// Event listener for the form submission
+addBusForm.addEventListener('submit', (e) => {
+    e.preventDefault(); // Prevents the page from reloading
+    formStatus.textContent = 'Adding bus...';
+    formStatus.style.color = '#333';
+
+    // Create an ordered array of all stops for the route
     const routeArray = [
         addBusForm.source.value.trim(),
         addBusForm.stop1.value.trim(),
@@ -66,17 +84,21 @@ addBusForm.addEventListener('submit', (e) => {
         addBusForm.destination.value.trim()
     ];
 
+    // Add the new bus data to the 'buses' collection in Firestore
     db.collection('buses').add({
         busType: addBusForm.newBusType.value,
         busName: addBusForm.busName.value,
         busNumber: addBusForm.busNumber.value,
-        driverId: addBusForm.driverId.value,
+        driverId: addBusForm.driverId.value, // This is the UID from Firebase Auth
         route: routeArray
     }).then(() => {
         formStatus.textContent = 'Bus added successfully!';
-        addBusForm.reset();
-        setTimeout(() => formStatus.textContent = '', 3000);
+        formStatus.style.color = 'green';
+        addBusForm.reset(); // Clear the form fields
+        setTimeout(() => formStatus.textContent = '', 4000); // Hide message after 4 seconds
     }).catch(error => {
         formStatus.textContent = `Error: ${error.message}`;
+        formStatus.style.color = 'red';
+        console.error("Error adding bus: ", error);
     });
 });
