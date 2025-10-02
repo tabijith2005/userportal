@@ -1,13 +1,14 @@
 // --- PASTE YOUR FIREBASE CONFIG OBJECT HERE ---
 const firebaseConfig = {
-apiKey: "AIzaSyD1KstRROoDmHP8hr6pRd7mIIZdogmu6TM",
-authDomain: "new-driver-location.firebaseapp.com",
-projectId: "new-driver-location",
-storageBucket: "new-driver-location.firebasestorage.app",
-messagingSenderId: "197479104675",
-appId: "1:197479104675:web:0a21e76becadfdc545bf16",
-measurementId: "G-J2BTQ32W5E"
+  apiKey: "AIzaSyAY17Qc2LyUR_UCcY_-b1oDNorz-4Jonoc",
+  authDomain: "admin-portal-33925.firebaseapp.com",
+  projectId: "admin-portal-33925",
+  storageBucket: "admin-portal-33925.firebasestorage.app",
+  messagingSenderId: "781424827329",
+  appId: "1:781424827329:web:38f7e079119c53f2eead40",
+  measurementId: "G-92E10DH6EL"
 };
+
 
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
