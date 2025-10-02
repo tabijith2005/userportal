@@ -1,7 +1,12 @@
 // --- PASTE YOUR FIREBASE CONFIG OBJECT HERE ---
 const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    // ... rest of your config
+apiKey: "AIzaSyD1KstRROoDmHP8hr6pRd7mIIZdogmu6TM",
+authDomain: "new-driver-location.firebaseapp.com",
+projectId: "new-driver-location",
+storageBucket: "new-driver-location.firebasestorage.app",
+messagingSenderId: "197479104675",
+appId: "1:197479104675:web:0a21e76becadfdc545bf16",
+measurementId: "G-J2BTQ32W5E"
 };
 
 // Initialize Firebase
